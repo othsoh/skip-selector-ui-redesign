@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Skip, SkipAPIResponse } from '../types';
+import { SkipAPIResponse } from '../types';
 import { skipService } from '../services';
 
 export const useSkips = (postcode: string = 'NR32', area: string = 'Lowestoft') => {

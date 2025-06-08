@@ -1,239 +1,8 @@
 import React, { useState, useMemo } from "react";
-import styled from "styled-components";
 import { SkipSelectorProps, Skip } from "../../types";
 import { useSkips } from "../../hooks";
 import { SkipCard } from "../SkipCard/SkipCard";
 import { Loading, ErrorState, Stepper } from "../common";
-import { colors, spacing, breakpoints } from "../../styles/theme";
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 ${spacing.md};
-
-  @media (min-width: ${breakpoints.sm}) {
-    padding: 0 ${spacing.lg};
-  }
-`;
-
-const Grid = styled.div<{ columns?: number; gap?: string }>`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: ${(props) => props.gap || spacing.lg};
-
-  @media (min-width: ${breakpoints.sm}) {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  }
-
-  @media (min-width: ${breakpoints.lg}) {
-    grid-template-columns: repeat(${(props) => props.columns || 3}, 1fr);
-  }
-`;
-
-const Button = styled.button<{
-  variant?: "primary" | "secondary" | "outline";
-  size?: "sm" | "md" | "lg";
-  fullWidth?: boolean;
-}>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: ${(props) => (props.size === "sm" ? "0.25rem" : "0.5rem")};
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  cursor: pointer;
-
-  padding: ${spacing.sm} ${spacing.lg};
-  font-size: 1rem;
-
-  ${(props) =>
-    props.size === "sm" &&
-    `
-    padding: ${spacing.xs} ${spacing.sm};
-    font-size: 0.875rem;
-  `}
-
-  ${(props) =>
-    props.size === "lg" &&
-    `
-    padding: ${spacing.lg} ${spacing.xl};
-    font-size: 1.125rem;
-  `}
-  
-  ${(props) => props.fullWidth && "width: 100%;"}
-  
-  background-color: ${colors.primary};
-  color: ${colors.white};
-
-  ${(props) =>
-    props.variant === "secondary" &&
-    `
-    background-color: ${colors.surface};
-    color: ${colors.text};
-  `}
-
-  ${(props) =>
-    props.variant === "outline" &&
-    `
-    background-color: transparent;
-    color: ${colors.primary};
-    border: 2px solid ${colors.primary};
-  `}
-  
-  &:hover {
-    background-color: ${colors.primaryHover};
-  }
-
-  ${(props) =>
-    props.variant === "secondary" &&
-    `
-    &:hover {
-      background-color: ${colors.backgroundSecondary};
-    }
-  `}
-
-  ${(props) =>
-    props.variant === "outline" &&
-    `
-    &:hover {
-      background-color: ${colors.primary};
-      color: ${colors.white};
-    }
-  `}
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const SelectorContainer = styled.div`
-  min-height: 100vh;
-  background: ${colors.background};
-  position: relative;
-`;
-
-const ContentContainer = styled.div`
-  background: ${colors.background};
-  padding: ${spacing.lg} 0;
-`;
-
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: ${spacing.xl};
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: ${colors.text};
-  margin-bottom: ${spacing.xs};
-
-  @media (max-width: ${breakpoints.sm}) {
-    font-size: 2rem;
-  }
-`;
-
-const Subtitle = styled.p`
-  font-size: 1rem;
-  color: ${colors.textSecondary};
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-`;
-
-const ResultsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${spacing.lg};
-  flex-wrap: wrap;
-  gap: ${spacing.md};
-`;
-
-const ResultsCount = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: ${colors.text};
-  margin: 0;
-`;
-
-const SortContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.xs};
-`;
-
-const SortSelect = styled.select`
-  padding: ${spacing.xs} ${spacing.sm};
-  border: 1px solid ${colors.border};
-  border-radius: 0.375rem;
-  background: ${colors.surface};
-  font-size: 0.75rem;
-  color: ${colors.text};
-  cursor: pointer;
-  min-width: 140px;
-
-  &:focus {
-    outline: none;
-    border-color: ${colors.primary};
-  }
-`;
-
-const SelectedSkipBar = styled.div<{ show: boolean }>`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: ${colors.surface};
-  border-top: 2px solid ${colors.primary};
-  padding: ${spacing.md};
-  box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1);
-  transform: translateY(${(props) => (props.show ? "0" : "100%")});
-  transition: transform 0.3s ease-in-out;
-  z-index: 1000;
-`;
-
-const SelectedSkipContent = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: ${spacing.md};
-`;
-
-const SelectedSkipInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-`;
-
-const SelectedSkipText = styled.div`
-  h4 {
-    margin: 0;
-    color: ${colors.text};
-    font-size: 1rem;
-    font-weight: 600;
-  }
-
-  p {
-    margin: 0;
-    color: ${colors.textSecondary};
-    font-size: 0.8rem;
-  }
-`;
-
-const HighlightedPrice = styled.span`
-  background: ${colors.primary};
-  color: ${colors.white};
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-left: 4px;
-`;
 
 type SortOption = "size-asc" | "size-desc" | "price-asc" | "price-desc";
 
@@ -276,38 +45,39 @@ export const SkipSelector: React.FC<SkipSelectorProps> = ({
     },
     {
       id: 4,
-      title: "Permit Check",
-      description: "Location verification",
+      title: "Delivery Details",
+      description: "Set delivery info",
       status: "upcoming" as const,
     },
     {
       id: 5,
-      title: "Choose Date",
-      description: "Pick delivery date",
+      title: "Payment",
+      description: "Complete payment",
       status: "upcoming" as const,
     },
     {
       id: 6,
-      title: "Payment",
-      description: "Complete order",
+      title: "Confirmation",
+      description: "Order confirmed",
       status: "upcoming" as const,
     },
   ];
 
-  const filteredAndSortedSkips = useMemo(() => {
+  const sortedSkips = useMemo(() => {
     if (!skips) return [];
 
-    // Just sort skips (removed filtering)
-    return skips.sort((a, b) => {
+    return [...skips].sort((a, b) => {
       switch (sortBy) {
+        case "size-asc":
+          return a.size - b.size;
         case "size-desc":
           return b.size - a.size;
         case "price-asc":
           return a.price_before_vat - b.price_before_vat;
         case "price-desc":
           return b.price_before_vat - a.price_before_vat;
-        default: // 'size-asc'
-          return a.size - b.size;
+        default:
+          return 0;
       }
     });
   }, [skips, sortBy]);
@@ -316,72 +86,100 @@ export const SkipSelector: React.FC<SkipSelectorProps> = ({
     setSelectedSkip(skip);
     onSkipSelect?.(skip);
   };
+
   const handleProceed = () => {
     if (selectedSkip) {
-      const priceWithVat = selectedSkip.price_before_vat * (1 + selectedSkip.vat / 100);
-      alert(
-        `Proceeding with ${selectedSkip.size} Yard Skip - £${priceWithVat.toFixed(2)}`
-      );
+      console.log("Proceeding with skip:", selectedSkip);
+      // Handle proceed logic
     }
   };
+
   if (loading) {
     return (
-      <SelectorContainer>
-        <ContentContainer>
-          <Loading text="Loading available skips..." />
-        </ContentContainer>
-      </SelectorContainer>
+      <div className="min-h-screen bg-gray-900 relative">
+        <div className="bg-gray-900 py-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <Stepper steps={steps} />
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-extrabold text-slate-100 mb-2 sm:text-3xl">
+                Select Your Skip
+              </h1>
+              <p className="text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Choose the perfect skip size for your waste disposal needs in {area}.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <Loading text="Finding available skips..." />
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <SelectorContainer>
-        <ContentContainer>
+      <div className="min-h-screen bg-gray-900 relative">
+        <div className="bg-gray-900 py-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <Stepper steps={steps} />
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-extrabold text-slate-100 mb-2 sm:text-3xl">
+                Select Your Skip
+              </h1>
+              <p className="text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Choose the perfect skip size for your waste disposal needs in {area}.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <ErrorState
-            title="Failed to Load Skips"
-            message={error}
+            message="Failed to load available skips. Please try again."
             onRetry={refetch}
-            retryText="Reload Skips"
           />
-        </ContentContainer>
-      </SelectorContainer>
+        </div>
+      </div>
     );
   }
-  return (
-    <SelectorContainer>
-      <ContentContainer>
-        <Container>
-          <Stepper steps={steps} currentStep={3} />
-          <Header>
-            <Title>Choose Your Skip Size</Title>
-            <Subtitle>
-              Select the perfect skip for your project from our range of sizes.
-            </Subtitle>
-          </Header>
 
-          <ResultsHeader>
-            <ResultsCount>
-              {filteredAndSortedSkips.length} Skip
-              {filteredAndSortedSkips.length !== 1 ? "s" : ""} Available
-            </ResultsCount>
-            <SortContainer>
-              <label htmlFor="sort-select">Sort by:</label>
-              <SortSelect
-                id="sort-select"
+  return (
+    <div className="min-h-screen bg-gray-900 relative">
+      <div className="bg-gray-900 py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <Stepper steps={steps} />
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-extrabold text-slate-100 mb-2 sm:text-3xl">
+              Select Your Skip
+            </h1>
+            <p className="text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              Choose the perfect skip size for your waste disposal needs in {area}.
+            </p>
+          </div>
+
+          {/* Results Header */}
+          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+            <h2 className="text-2xl font-semibold text-slate-100 m-0">
+              {sortedSkips.length} skip{sortedSkips.length !== 1 ? "s" : ""} available
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-400">Sort by:</span>
+              <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="px-3 py-2 border border-slate-700 rounded-md bg-surface text-xs text-slate-100 cursor-pointer min-w-[140px] focus:outline-none focus:border-primary"
               >
                 <option value="size-asc">Size (Small to Large)</option>
                 <option value="size-desc">Size (Large to Small)</option>
                 <option value="price-asc">Price (Low to High)</option>
                 <option value="price-desc">Price (High to Low)</option>
-              </SortSelect>
-            </SortContainer>
-          </ResultsHeader>
+              </select>
+            </div>
+          </div>
 
-          <Grid>
-            {filteredAndSortedSkips.map((skip) => (
+          {/* Grid */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {sortedSkips.map((skip) => (
               <SkipCard
                 key={skip.id}
                 skip={skip}
@@ -389,45 +187,37 @@ export const SkipSelector: React.FC<SkipSelectorProps> = ({
                 isSelected={selectedSkip?.id === skip.id}
               />
             ))}
-          </Grid>
-        </Container>
-        <SelectedSkipBar show={!!selectedSkip}>
-          <Container>
-            <SelectedSkipContent>              <SelectedSkipInfo>                <SelectedSkipText>
-                  <h4>{selectedSkip?.size} Yard Skip Selected</h4>
-                  <p>
-                    <HighlightedPrice>
-                      £
-                      {selectedSkip
-                        ? (() => {
-                            const priceWithVat = selectedSkip.price_before_vat * (1 + selectedSkip.vat / 100);
-                            return priceWithVat % 1 === 0 
-                              ? priceWithVat.toFixed(0) 
-                              : priceWithVat.toFixed(2);
-                          })()
-                        : "0"}{" "}
-                      inc. VAT
-                    </HighlightedPrice>
-                    {selectedSkip?.transport_cost && (
-                      <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: '#9ca3af' }}>
-                        + £{selectedSkip.transport_cost} transport
-                      </span>
-                    )}
-                    {selectedSkip?.per_tonne_cost && (
-                      <span style={{ marginLeft: '8px', fontSize: '0.75rem', color: '#9ca3af' }}>
-                        £{selectedSkip.per_tonne_cost}/tonne
-                      </span>
-                    )}
-                  </p>
-                </SelectedSkipText>
-              </SelectedSkipInfo><Button size="md" onClick={handleProceed}>
-                Proceed to Checkout
-                <ArrowRightIcon />
-              </Button>
-            </SelectedSkipContent>
-          </Container>
-        </SelectedSkipBar>
-      </ContentContainer>
-    </SelectorContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Selected Skip Bar */}
+      {selectedSkip && (
+        <div className="fixed bottom-0 left-0 right-0 bg-surface border-t-2 border-primary p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transform translate-y-0 transition-transform duration-300 ease-in-out z-[1000]">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div>
+                <h4 className="m-0 text-slate-100 text-base font-semibold">
+                  {selectedSkip.size} Yard Skip Selected
+                </h4>
+                <p className="m-0 text-slate-400 text-sm">
+                  {selectedSkip.hire_period_days} day hire •{" "}
+                  <span className="bg-primary text-white px-1.5 py-0.5 rounded font-semibold text-sm ml-1">
+                    £{(selectedSkip.price_before_vat * (1 + selectedSkip.vat / 100)).toFixed(2)}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleProceed}
+              className="inline-flex items-center justify-center gap-2 border-0 rounded-lg font-semibold transition-all duration-200 cursor-pointer px-6 py-3 text-base bg-primary text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Continue to Delivery Details
+              <ArrowRightIcon />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

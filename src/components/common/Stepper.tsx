@@ -1,15 +1,4 @@
 import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import { colors, spacing } from '../../styles/theme';
-
-const StepperGlobalStyle = createGlobalStyle`
-  @media (max-width: 768px) {
-    .desktop-icon {
-      width: 16px !important;
-      height: 16px !important;
-    }
-  }
-`;
 
 export interface Step {
   id: number;
@@ -20,297 +9,32 @@ export interface Step {
 
 interface StepperProps {
   steps: Step[];
-  currentStep: number;
+  currentStep?: number;
 }
-
-const StepperContainer = styled.div`
-  width: 100%;
-  margin-bottom: ${spacing.sm};
-  padding: ${spacing.xs} 0;
-  
-  @media (max-width: 768px) {
-    margin-bottom: ${spacing.lg};
-    padding: ${spacing.md} 0;
-  }
-`;
-
-// Desktop: Single row layout
-const DesktopStepper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.xs};
-  justify-content: center;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: ${spacing.xs} 0;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-// Mobile: Two-row layout
-const MobileStepper = styled.div`
-  display: none;
-  
-  @media (max-width: 768px) {
-    display: block;
-    position: relative;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-`;
-
-const StepRow = styled.div<{ isBottomRow?: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${props => props.isBottomRow ? '0' : spacing.xl};
-  position: relative;
-  
-  @media (min-width: 769px) {
-    margin-bottom: ${props => props.isBottomRow ? '0' : spacing.md};
-  }
-`;
-
-const StepCircle = styled.div<{ status: 'completed' | 'current' | 'upcoming' }>`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-  border: 2px solid;
-  position: relative;
-  z-index: 2;
-  
-  @media (max-width: 768px) {
-    width: 50px;
-    height: 50px;
-    font-size: 1rem;
-    border: 3px solid;
-  }
-  
-  ${props => {
-    switch (props.status) {
-      case 'completed':
-        return `
-          background: ${colors.success};
-          border-color: ${colors.success};
-          color: white;
-        `;
-      case 'current':        return `
-          background: ${colors.primary};
-          border-color: ${colors.primary};
-          color: white;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        `;
-      case 'upcoming':
-        return `
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(100, 100, 100, 0.4);
-          color: rgba(255, 255, 255, 0.6);
-        `;
-      default:
-        return `
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(100, 100, 100, 0.4);
-          color: rgba(255, 255, 255, 0.6);
-        `;
-    }
-  }}
-    @media (max-width: 768px) {
-    ${props => {
-    switch (props.status) {
-      case 'current':
-        return `
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-        `;
-      default:
-        return '';
-    }
-  }}
-  }
-  
-  transition: all 0.3s ease;
-`;
-
-const StepLabel = styled.div<{ status: 'completed' | 'current' | 'upcoming' }>`
-  position: absolute;
-  top: 44px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.75rem;
-  font-weight: 500;
-  white-space: nowrap;
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    top: 60px;
-    font-size: 0.875rem;
-  }
-  
-  ${props => {
-    switch (props.status) {
-      case 'completed':
-        return `color: ${colors.success};`;
-      case 'current':
-        return `color: ${colors.primary};`;
-      case 'upcoming':
-        return `color: rgba(255, 255, 255, 0.5);`;
-      default:
-        return `color: rgba(255, 255, 255, 0.5);`;
-    }
-  }}
-`;
-
-// Connection lines for mobile two-row layout
-const ConnectionLine = styled.div<{ isActive: boolean }>`
-  position: absolute;
-  height: 2px;
-  background: ${props => props.isActive ? colors.primary : 'rgba(100, 100, 100, 0.3)'};
-  border-radius: 2px;
-  z-index: 1;
-  
-  @media (max-width: 768px) {
-    height: 3px;
-  }
-`;
-
-const TopRowLine = styled(ConnectionLine)`
-  top: 50%;
-  left: 36px;
-  right: 36px;
-  transform: translateY(-50%);
-  
-  @media (max-width: 768px) {
-    left: 50px;
-    right: 50px;
-  }
-`;
-
-const BottomRowLine = styled(ConnectionLine)`
-  top: 50%;
-  left: 36px;
-  right: 36px;
-  transform: translateY(-50%);
-  
-  @media (max-width: 768px) {
-    left: 50px;
-    right: 50px;
-  }
-`;
-
-const VerticalConnector = styled(ConnectionLine)<{ isActive: boolean }>`
-  width: 2px;
-  height: 40px;
-  right: 18px;
-  top: 36px;
-  background: ${props => props.isActive ? colors.primary : 'rgba(100, 100, 100, 0.3)'};
-  
-  @media (max-width: 768px) {
-    width: 3px;
-    height: 60px;
-    right: 25px;
-    top: 50px;
-  }
-`;
-
-// Desktop connection lines (horizontal)
-const DesktopConnectionLine = styled.div<{ isActive: boolean }>`
-  flex: 1;
-  height: 2px;
-  background: ${props => props.isActive ? colors.primary : 'rgba(100, 100, 100, 0.3)'};
-  border-radius: 2px;
-  min-width: 30px;
-  max-width: 60px;
-  margin: 0 -2px;
-`;
-
-const MobileStepWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  flex-shrink: 0;
-`;
-
-const DesktopStepWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  flex-shrink: 0;
-`;
-
-const MobileStepLabel = styled.div<{ status: 'completed' | 'current' | 'upcoming' }>`
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-top: ${spacing.xs};
-  text-align: center;
-  max-width: 60px;
-  
-  ${props => {
-    switch (props.status) {
-      case 'completed':
-        return `color: ${colors.success};`;
-      case 'current':
-        return `color: ${colors.primary};`;
-      case 'upcoming':
-        return `color: rgba(255, 255, 255, 0.5);`;
-      default:
-        return `color: rgba(255, 255, 255, 0.5);`;
-    }
-  }}
-`;
-
-const DesktopStepLabel = styled.div<{ status: 'completed' | 'current' | 'upcoming' }>`
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-top: ${spacing.xs};
-  text-align: center;
-  white-space: nowrap;
-  
-  ${props => {
-    switch (props.status) {
-      case 'completed':
-        return `color: ${colors.success};`;
-      case 'current':
-        return `color: ${colors.primary};`;
-      case 'upcoming':
-        return `color: rgba(255, 255, 255, 0.5);`;
-      default:
-        return `color: rgba(255, 255, 255, 0.5);`;
-    }
-  }}
-`;
 
 // Icon components
 const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <polyline points="20,6 9,17 4,12"/>
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
     <circle cx="12" cy="10" r="3"/>
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <polyline points="3,6 5,6 21,6"/>
     <path d="m19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/>
   </svg>
 );
 
 const TruckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <rect x="1" y="3" width="15" height="13"/>
     <polygon points="16,8 20,8 23,11 23,16 16,16"/>
     <circle cx="5.5" cy="18.5" r="2.5"/>
@@ -319,13 +43,13 @@ const TruckIcon = () => (
 );
 
 const ShieldIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
   </svg>
 );
 
 const CalendarIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
     <line x1="16" y1="2" x2="16" y2="6"/>
     <line x1="8" y1="2" x2="8" y2="6"/>
@@ -334,7 +58,7 @@ const CalendarIcon = () => (
 );
 
 const CreditCardIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="desktop-icon">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 md:w-4 md:h-4">
     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
     <line x1="1" y1="10" x2="23" y2="10"/>
   </svg>
@@ -354,76 +78,123 @@ const getStepIcon = (stepId: number, status: string) => {
   }
 };
 
-export const Stepper: React.FC<StepperProps> = ({ steps }) => {
-  // For mobile layout: arrange as 1-2-3 top row, 6-5-4 bottom row
-  const topRowSteps = steps.slice(0, 3); // Steps 1, 2, 3
-  const bottomRowSteps = steps.slice(3, 6).reverse(); // Steps 6, 5, 4 (reversed)
+const getStepStyles = (status: 'completed' | 'current' | 'upcoming') => {
+  const baseClasses = "w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center font-semibold text-sm md:text-base border-2 md:border-3 relative z-10 transition-all duration-300";
+  
+  switch (status) {
+    case 'completed':
+      return `${baseClasses} bg-green-500 border-green-500 text-white`;
+    case 'current':
+      return `${baseClasses} bg-blue-500 border-blue-500 text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)] md:shadow-[0_0_0_4px_rgba(59,130,246,0.2)]`;
+    case 'upcoming':
+      return `${baseClasses} bg-white/10 border-gray-400/40 text-white/60`;
+    default:
+      return `${baseClasses} bg-white/10 border-gray-400/40 text-white/60`;
+  }
+};
 
-  const isConnectionActive = (fromStep: number, toStep: number) => {
-    const fromIndex = steps.findIndex(s => s.id === fromStep);
-    const toIndex = steps.findIndex(s => s.id === toStep);
-    return fromIndex !== -1 && toIndex !== -1 && 
-           (steps[fromIndex].status === 'completed' || steps[toIndex].status === 'completed');
-  };
-  const renderMobileStepCircle = (step: Step) => (
-    <div key={step.id} style={{ position: 'relative' }}>
-      <StepCircle status={step.status}>
-        {getStepIcon(step.id, step.status)}
-      </StepCircle>
-      <StepLabel status={step.status}>
-        {step.title}
-      </StepLabel>
-    </div>
-  );
+const getLabelStyles = (status: 'completed' | 'current' | 'upcoming') => {
+  const baseClasses = "text-xs md:text-sm font-medium text-center";
+  
+  switch (status) {
+    case 'completed':
+      return `${baseClasses} text-green-500`;
+    case 'current':
+      return `${baseClasses} text-blue-500`;
+    case 'upcoming':
+      return `${baseClasses} text-white/50`;
+    default:
+      return `${baseClasses} text-white/50`;
+  }
+};
+
+export const Stepper: React.FC<StepperProps> = ({ steps }) => {
   return (
-    <StepperContainer>
-      <StepperGlobalStyle />
-      {/* Desktop Layout - Single Row */}      <DesktopStepper>
+    <div className="w-full mb-4 md:mb-8 py-2 md:py-4">
+      {/* Desktop Layout - Single Row */}
+      <div className="hidden lg:flex items-center gap-2 justify-center w-full max-w-5xl mx-auto py-2">
         {steps.map((step, index) => (
           <React.Fragment key={step.id}>
-            <DesktopStepWrapper>
-              <StepCircle status={step.status}>
+            <div className="flex flex-col items-center relative flex-shrink-0">
+              <div className={getStepStyles(step.status)}>
                 {getStepIcon(step.id, step.status)}
-              </StepCircle>
-              <DesktopStepLabel status={step.status}>
+              </div>
+              <div className={getLabelStyles(step.status)}>
                 {step.title}
-              </DesktopStepLabel>
-            </DesktopStepWrapper>
+              </div>
+            </div>
             {index < steps.length - 1 && (
-              <DesktopConnectionLine isActive={step.status === 'completed'} />
+              <div 
+                className={`flex-1 h-0.5 rounded-full min-w-8 max-w-16 mx-[-2px] ${
+                  step.status === 'completed' ? 'bg-green-500' : 'bg-gray-400/30'
+                }`} 
+              />
             )}
           </React.Fragment>
         ))}
-      </DesktopStepper>
+      </div>
 
-      {/* Mobile Layout - Two Rows */}
-      <MobileStepper>
-        {/* Top Row: 1 -> 2 -> 3 */}
-        <StepRow>
-          {topRowSteps.map((step, index) => (
-            <React.Fragment key={step.id}>
-              {renderMobileStepCircle(step)}
-              {index < topRowSteps.length - 1 && (
-                <TopRowLine isActive={isConnectionActive(step.id, topRowSteps[index + 1].id)} />
-              )}
-            </React.Fragment>
+      {/* Tablet Layout - 2x3 Grid */}
+      <div className="hidden md:block lg:hidden px-4">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-6 max-w-md mx-auto">
+          {steps.map((step) => (
+            <div key={step.id} className="flex flex-col items-center">
+              <div className={getStepStyles(step.status)}>
+                {getStepIcon(step.id, step.status)}
+              </div>
+              <div className={`${getLabelStyles(step.status)} mt-2 text-center text-xs leading-tight`}>
+                {step.title}
+              </div>
+            </div>
           ))}
-          {/* Vertical connector from 3 to 4 */}
-          <VerticalConnector isActive={isConnectionActive(3, 4)} />
-        </StepRow>
-
-        {/* Bottom Row: 6 <- 5 <- 4 */}
-        <StepRow isBottomRow>
-          {bottomRowSteps.map((step, index) => (
-            <React.Fragment key={step.id}>
-              {renderMobileStepCircle(step)}
-              {index < bottomRowSteps.length - 1 && (
-                <BottomRowLine isActive={isConnectionActive(step.id, bottomRowSteps[index + 1].id)} />
-              )}
-            </React.Fragment>
-          ))}
-        </StepRow>
-      </MobileStepper>
-    </StepperContainer>
+        </div>
+      </div>      {/* Mobile Layout - Simple 2 Rows with Numbers and Connecting Lines */}
+      <div className="block md:hidden px-4">
+        <div className="relative max-w-sm mx-auto">
+          {/* Connecting Lines */}
+          <div className="absolute inset-0 z-0">
+            {/* First row connecting lines (1-2, 2-3) */}
+            <div className={`absolute top-[14px] left-[28px] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
+              steps[1]?.status === 'completed' || steps[1]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
+            }`}></div>
+            <div className={`absolute top-[14px] left-[calc(33.333%+28px)] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
+              steps[2]?.status === 'completed' || steps[2]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
+            }`}></div>
+            
+            {/* Vertical connecting line from step 3 to 4 */}
+            <div className={`absolute top-[calc(14px+14px)] right-[14px] w-0.5 h-3 transition-colors duration-300 ${
+              steps[3]?.status === 'completed' || steps[3]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
+            }`}></div>
+            
+            {/* Second row connecting lines (4-5, 5-6) - Note: right to left */}
+            <div className={`absolute top-[calc(14px+3rem+12px)] right-[28px] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
+              steps[4]?.status === 'completed' || steps[4]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
+            }`}></div>
+            <div className={`absolute top-[calc(14px+3rem+12px)] right-[calc(33.333%+28px)] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
+              steps[5]?.status === 'completed' || steps[5]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
+            }`}></div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-x-4 gap-y-3 relative z-10">
+            {steps.map((step) => (
+              <div key={step.id} className="flex flex-col items-center">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border-2 relative z-10 transition-all duration-300 ${
+                  step.status === 'completed' 
+                    ? 'bg-green-500 border-green-500 text-white' 
+                    : step.status === 'current'
+                    ? 'bg-blue-500 border-blue-500 text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)]'
+                    : 'bg-white/10 border-gray-400/40 text-white/60'
+                }`}>
+                  {step.status === 'completed' ? <CheckIcon /> : step.id}
+                </div>
+                <div className={`${getLabelStyles(step.status)} mt-1 text-center text-xs leading-tight px-1`}>
+                  {step.title}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

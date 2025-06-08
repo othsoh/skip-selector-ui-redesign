@@ -1,261 +1,6 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { SkipCardProps } from "../../types";
 import { getSkipImageUrl, formatHirePeriod } from "../../utils";
-import { colors, spacing } from "../../styles/theme";
-
-const Card = styled.div`
-  background: ${colors.surface};
-  backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid ${colors.border};
-  overflow: hidden;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
-    transition: left 0.5s;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
-
-  &:hover {
-    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-    transform: translateY(-4px) scale(1.02);
-  }
-`;
-
-const StyledCard = styled(Card)<{ isSelected?: boolean; isHovered?: boolean }>`
-  position: relative;
-  cursor: pointer;
-  ${(props) =>
-    props.isSelected &&
-    `
-    border: 1px solid #3b82f6;
-    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.4);
-    background: rgba(59, 130, 246, 0.15);
-    transform: translateY(-2px) scale(1.01);
-  `}
-
-  ${(props) =>
-    props.isHovered &&
-    !props.isSelected &&
-    `
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);  `}
-`;
-
-const FeatureBadge = styled.div<{ type: "road" | "heavy" | "warning" }>`
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 20;
-  padding: 4px 8px;
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  ${(props) =>
-    props.type === "road" &&
-    `
-    background: rgba(34, 197, 94, 0.9);
-    color: white;
-  `}
-
-  ${(props) =>
-    props.type === "heavy" &&
-    `
-    background: rgba(168, 85, 247, 0.9);
-    color: white;
-  `}
-  
-  ${(props) =>
-    props.type === "warning" &&
-    `
-    background: rgba(239, 68, 68, 0.9);
-    color: white;
-  `}
-`;
-
-const ImageContainer = styled.div`
-  position: relative;
-  height: 224px;
-  overflow: hidden;
-`;
-
-const ImageOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
-  z-index: 10;
-`;
-
-const SkipImage = styled.img<{ isHovered?: boolean }>`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s ease;
-  transform: ${(props) => (props.isHovered ? "scale(1.1)" : "scale(1)")};
-`;
-
-const SizeBadge = styled.div`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 20;
-  background: rgba(28, 28, 28, 0.9);
-  backdrop-filter: blur(10px);
-  color: ${colors.text};
-  font-weight: 700;
-  font-size: 0.875rem;
-  padding: 6px 8px;
-  border-radius: 0.375rem;
-  border: 1px solid ${colors.border};
-`;
-
-const SelectedOverlay = styled.div<{ show: boolean }>`
-  position: absolute;
-  inset: 0;
-  background: rgba(59, 130, 246, 0.2);
-  z-index: 20;
-  display: ${(props) => (props.show ? "flex" : "none")};
-  align-items: center;
-  justify-content: center;
-`;
-
-const CheckIcon = styled.div`
-  background: rgba(28, 28, 28, 0.95);
-  border: 2px solid ${colors.primary};
-  border-radius: 50%;
-  padding: 12px;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${colors.primary};
-`;
-
-const CardContent = styled.div`
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Title = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: ${colors.text};
-  margin: 0 0 8px 0;
-`;
-
-const Description = styled.p`
-  color: ${colors.textSecondary};
-  font-size: 0.875rem;
-  line-height: 1.5;
-  margin: 0;
-`;
-
-const InfoGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  font-size: 0.75rem;
-`;
-
-const InfoItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: ${colors.textMuted};
-`;
-
-const PriceSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid ${colors.border};
-`;
-
-const Price = styled.div`
-  font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(to right, #3b82f6, #6366f1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const VatText = styled.div`
-  font-size: 0.75rem;
-  color: ${colors.textMuted};
-`;
-
-const Button = styled.button<{
-  variant?: "primary" | "secondary" | "outline";
-  size?: "sm" | "md" | "lg";
-  fullWidth?: boolean;
-  isSelected?: boolean;
-}>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  padding: ${spacing.sm} ${spacing.lg};
-  font-size: 1rem;
-  width: 100%;
-  gap: 8px;
-  ${(props) =>
-    props.isSelected
-      ? `
-    background: linear-gradient(to right, #1e40af, #3b82f6);
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.25);
-    
-    &:hover {
-      background: linear-gradient(to right, #1d4ed8, #2563eb);
-    }
-  `
-      : `
-    background: linear-gradient(to right, #3b82f6, #6366f1);
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.25);
-    
-    &:hover {
-      background: linear-gradient(to right, #2563eb, #4f46e5);
-    }
-  `}
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
 
 // Icon components (simplified SVGs)
 const CalendarIcon = () => (
@@ -382,102 +127,151 @@ export const SkipCard: React.FC<SkipCardProps> = ({
   const priceWithVat = skip.price_before_vat * (1 + skip.vat / 100);
   const formattedPrice =
     priceWithVat % 1 === 0 ? priceWithVat.toFixed(0) : priceWithVat.toFixed(2);
-
   return (
-    <StyledCard
-      isSelected={isSelected}
-      isHovered={isHovered}
+    <div
+      className={`
+        relative cursor-pointer 
+        bg-surface backdrop-blur-sm rounded-2xl 
+        shadow-lg transition-all duration-500 ease-out
+        border border-slate-700 overflow-hidden
+        card-shimmer
+        ${
+          isSelected
+            ? "border-primary shadow-[0_25px_50px_-12px_rgba(59,130,246,0.4)] bg-blue-500/15 -translate-y-0.5 scale-101"
+            : ""
+        }
+        ${
+          isHovered && !isSelected
+            ? "-translate-y-1 scale-102 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]"
+            : ""
+        }
+        ${!isSelected && !isHovered ? "hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:-translate-y-1 hover:scale-102" : ""}
+      `}
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="h-full"
     >
-      {" "}
-      <ImageContainer>
-        <ImageOverlay />
-        <SkipImage
+      {/* Image Container */}
+      <div className="relative h-56 overflow-hidden">
+        {/* Image Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
+        
+        {/* Skip Image */}
+        <img
           src={imageUrl}
           alt={`${skip.size} Yard Skip`}
-          isHovered={isHovered}
-        />{" "}
+          className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+            isHovered ? "scale-110" : "scale-100"
+          }`}
+        />
+
+        {/* Feature Badges */}
         {!skip.allowed_on_road && (
-          <FeatureBadge type="warning">
+          <div className="absolute top-4 left-4 z-20 px-2 py-1 rounded-md text-xs font-semibold backdrop-blur-sm bg-red-500/90 text-white flex items-center gap-1">
             <TruckIcon />
             Not Allowed on Road
-          </FeatureBadge>
+          </div>
         )}
+
         {skip.allows_heavy_waste && (
-          <FeatureBadge
-            type="heavy"
+          <div
+            className="absolute left-4 z-20 px-2 py-1 rounded-md text-xs font-semibold backdrop-blur-sm bg-purple-500/90 text-white flex items-center gap-1"
             style={{ top: !skip.allowed_on_road ? "52px" : "16px" }}
           >
             <WeightIcon />
             Heavy Waste
-          </FeatureBadge>
-        )}
-        <SizeBadge>{skip.size} Yard</SizeBadge>
-        <SelectedOverlay show={isSelected}>
-          <CheckIcon>
-            <CheckIconLarge />
-          </CheckIcon>
-        </SelectedOverlay>
-      </ImageContainer>
-      <CardContent className="h-full flex flex-col justify-between">
-        <div>
-          <div>
-            <Title>{skip.size} Yard Skip</Title>{" "}
-            <Description>
-              {skip.hire_period_days} day hire period
-              {skip.allowed_on_road
-                ? " • Road placement allowed"
-                : " • Private property only"}
-              {skip.allows_heavy_waste ? " • Heavy waste accepted" : ""}
-              {skip.forbidden ? " • Special restrictions apply" : ""}
-            </Description>
           </div>
-          <InfoGrid>
-            <InfoItem>
-              <CalendarIcon />
-              <span>{hirePeriod}</span>
-            </InfoItem>
-            <InfoItem>
-              <PackageIcon />
-              <span>{skip.size} yard capacity</span>
-            </InfoItem>
-            {skip.transport_cost && (
-              <InfoItem>
-                <TruckIcon />
-                <span>£{skip.transport_cost} transport</span>
-              </InfoItem>
-            )}
-            {skip.per_tonne_cost && (
-              <InfoItem>
-                <DollarIcon />
-                <span>£{skip.per_tonne_cost} per tonne</span>
-              </InfoItem>
-            )}
-          </InfoGrid>
+        )}
+
+        {/* Size Badge */}
+        <div className="absolute top-4 right-4 z-20 bg-gray-800/90 backdrop-blur-sm text-slate-100 font-bold text-sm px-2 py-1.5 rounded-md border border-slate-700">
+          {skip.size} Yard
         </div>
+
+        {/* Selected Overlay */}
+        {isSelected && (
+          <div className="absolute inset-0 bg-blue-500/20 z-20 flex items-center justify-center">
+            <div className="bg-gray-800/95 border-2 border-primary rounded-full p-3 shadow-lg flex items-center justify-center text-primary">
+              <CheckIconLarge />
+            </div>
+          </div>
+        )}
+      </div>      {/* Card Content */}
+      <div className="p-6 flex flex-col gap-4">
         <div>
-          <PriceSection>
-            <Price>£{formattedPrice}</Price>
-            <VatText>inc. VAT</VatText>
-          </PriceSection>
-          <Button isSelected={isSelected} onClick={handleButtonClick}>
-            {isSelected ? (
-              <>
-                <CheckIcon2 />
-                Selected
-              </>
-            ) : (
-              <>
-                <PackageIcon />
-                Select This Skip
-              </>
-            )}
-          </Button>
+          <h3 className="text-xl font-bold text-slate-100 mb-2">
+            {skip.size} Yard Skip
+          </h3>
+          <p className="text-slate-400 text-sm leading-relaxed mb-4">
+            {skip.hire_period_days} day hire period
+            {skip.allowed_on_road
+              ? " • Road placement allowed"
+              : " • Private property only"}
+            {skip.allows_heavy_waste ? " • Heavy waste accepted" : ""}
+            {skip.forbidden ? " • Special restrictions apply" : ""}
+          </p>
         </div>
-      </CardContent>
-    </StyledCard>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="flex items-center gap-2 text-slate-500">
+            <CalendarIcon />
+            <span>{hirePeriod}</span>
+          </div>
+          <div className="flex items-center gap-2 text-slate-500">
+            <PackageIcon />
+            <span>{skip.size} yard capacity</span>
+          </div>
+          {skip.transport_cost && (
+            <div className="flex items-center gap-2 text-slate-500">
+              <TruckIcon />
+              <span>£{skip.transport_cost} transport</span>
+            </div>
+          )}
+          {skip.per_tonne_cost && (
+            <div className="flex items-center gap-2 text-slate-500">
+              <DollarIcon />
+              <span>£{skip.per_tonne_cost} per tonne</span>
+            </div>
+          )}
+        </div>
+
+        {/* Price Section */}
+        <div className="flex items-center justify-between pt-4 border-t border-slate-700">
+          <div className="text-2xl font-bold text-gradient">
+            £{formattedPrice}
+          </div>
+          <div className="text-xs text-slate-500">inc. VAT</div>
+        </div>
+
+        {/* Button */}
+        <button
+          onClick={handleButtonClick}
+          className={`
+            inline-flex items-center justify-center w-full gap-2
+            border-0 rounded-lg font-semibold transition-all duration-300 
+            cursor-pointer px-3 py-3 text-base
+            ${
+              isSelected
+                ? "btn-gradient-selected text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
+                : "btn-gradient text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
+            }
+            disabled:opacity-50 disabled:cursor-not-allowed
+          `}
+        >
+          {isSelected ? (
+            <>
+              <CheckIcon2 />
+              Selected
+            </>
+          ) : (
+            <>
+              <PackageIcon />
+              Select This Skip
+            </>
+          )}
+        </button>
+      </div>
+    </div>
   );
 };

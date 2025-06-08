@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalStyle } from './styles/GlobalStyle';
+import './index.css';
 import { Skip } from './types';
 import { Layout } from './components';
 import { SkipSelector } from './components/SkipSelector/SkipSelector';
@@ -10,16 +10,13 @@ function App() {
   };
 
   return (
-    <>
-      <GlobalStyle />
-      <Layout>
-        <SkipSelector
-          postcode="NR32"
-          area="Lowestoft"
-          onSkipSelect={handleSkipSelect}
-        />
-      </Layout>
-    </>
+    <Layout>
+      <SkipSelector
+        postcode="NR32"
+        area="Lowestoft"
+        onSkipSelect={handleSkipSelect}
+      />
+    </Layout>
   );
 }
 

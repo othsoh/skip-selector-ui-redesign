@@ -11,11 +11,9 @@ A complete redesign of the WeWantWaste skip selection page, built with React Typ
 
 ### Desktop View
 ![Desktop - Skip Selection Interface](https://github.com/user-attachments/assets/583784bf-b218-43b8-918f-78a8b93cb4a5)
-*Modern dark theme with horizontal stepper and card grid layout*
 
 ### Mobile View
 ![Mobile - Responsive Design](https://github.com/user-attachments/assets/bad9fb53-0b97-4554-830f-a36f5594f48e)
-*2x3 grid layout with connecting stepper lines optimized for touch*
 
 ### Key UI Features
 - 🌙 **Dark Theme**: Professional dark interface with blue accents

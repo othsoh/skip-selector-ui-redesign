@@ -235,4 +235,5 @@ Deployed on **Vercel** with automatic deployments from GitHub:
 **Othman** - GitHub: [@othsoh](https://github.com/othsoh)
 
 **Othman** - Linkedin: [@othsoh](https://www.linkedin.com/in/othman-sohab/)
+**Othman** - Email: [othman.sohab@gmail.com](mailto:othman.sohab@gmail.com)
 

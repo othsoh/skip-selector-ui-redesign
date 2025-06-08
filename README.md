@@ -1,49 +1,270 @@
-# Getting Started with Create React App
+# Skip Selector UI Redesign
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive React TypeScript application for selecting waste disposal skips. This project represents a complete redesign and refactoring from styled-components to TailwindCSS, featuring a beautiful dark theme with gradient effects, animations, and mobile-first responsive design.
 
-## Available Scripts
+![Skip Selector UI](https://img.shields.io/badge/React-TypeScript-blue?style=for-the-badge&logo=react)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Styling-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge&logo=vercel)
 
-In the project directory, you can run:
+## 🎯 Project Overview
 
-### `npm start`
+This application allows users to browse and select from various skip sizes for waste disposal. The UI features:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Modern Design**: Dark theme with glass-morphism effects
+- **Responsive Layout**: Optimized for mobile, tablet, and desktop
+- **Interactive Elements**: Hover effects, animations, and smooth transitions
+- **Step-by-Step Selection**: Guided user experience with progress indicators
+- **Real-time Data**: Integration with skip availability API
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Key Features
 
-### `npm test`
+### 🎨 Visual Design
+- **Dark Theme**: Modern dark UI with blue accent colors
+- **Glass Morphism**: Backdrop blur effects and transparent elements
+- **Gradient Effects**: Custom CSS gradients for buttons and text
+- **Smooth Animations**: CSS transitions and hover effects
+- **Card-based Layout**: Clean, organized skip presentation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 📱 Responsive Design
+- **Mobile-First**: Optimized for touch devices
+- **Adaptive Grid**: 2x3 grid on mobile/tablet, horizontal on desktop
+- **Flexible Stepper**: Different layouts per screen size
+- **Touch-Friendly**: Appropriate button sizes and spacing
 
-### `npm run build`
+### 🔧 Technical Features
+- **TypeScript**: Full type safety and better developer experience
+- **Modern React**: Functional components with hooks
+- **TailwindCSS**: Utility-first CSS framework
+- **Error Handling**: Graceful error states and loading indicators
+- **API Integration**: Fetch skip data from external service
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠 Technology Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend
+- **React 19.1.0** - UI library
+- **TypeScript 4.9.5** - Type safety
+- **TailwindCSS 3.4.17** - Styling framework
+- **React Testing Library** - Testing utilities
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development Tools
+- **Create React App** - Project setup and build tools
+- **PostCSS** - CSS processing
+- **Autoprefixer** - CSS vendor prefixes
+- **Git** - Version control
 
-### `npm run eject`
+### Deployment
+- **Vercel** - Hosting and continuous deployment
+- **GitHub** - Code repository and CI/CD
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚀 Live Demo
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Production URL**: [https://skip-selector-ui-redesign.vercel.app](https://skip-selector-ui-redesign.vercel.app)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📦 Installation & Setup
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn package manager
+- Git
 
-## Learn More
+### Local Development
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/othsoh/skip-selector-ui-redesign.git
+   cd skip-selector-ui-redesign
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. **Install dependencies**
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+
+3. **Start development server**
+   ```bash
+   npm start
+   ```
+
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+The build artifacts will be stored in the `build/` directory.
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary**: Blue (#3B82F6)
+- **Background**: Dark slate (#0F172A)
+- **Surface**: Dark gray with transparency
+- **Text**: Light gray (#E2E8F0)
+- **Accent**: Purple, Red for status indicators
+
+### Typography
+- **Headings**: Bold, large sizes for skip titles
+- **Body Text**: Regular weight, comfortable reading size
+- **Labels**: Small, muted for secondary information
+
+### Layout Principles
+- **Grid System**: CSS Grid for card layouts
+- **Flexbox**: For component internal layout
+- **Spacing**: Consistent padding and margins
+- **Responsive Breakpoints**: Mobile-first approach
+
+## 🏗 Architecture
+
+### Project Structure
+```
+src/
+├── components/           # Reusable UI components
+│   ├── common/          # Shared components
+│   │   ├── ErrorState.tsx
+│   │   ├── Loading.tsx
+│   │   └── Stepper.tsx
+│   ├── Layout/          # App layout wrapper
+│   ├── SkipCard/        # Individual skip display
+│   └── SkipSelector/    # Main selection interface
+├── hooks/               # Custom React hooks
+├── services/            # API integration
+├── types/               # TypeScript definitions
+└── utils/               # Helper functions
+```
+
+### Component Hierarchy
+```
+App
+└── Layout
+    └── SkipSelector
+        ├── Stepper
+        ├── SkipCard[]
+        ├── Loading
+        └── ErrorState
+```
+
+## 🔄 Migration from Styled-Components
+
+This project was completely refactored from styled-components to TailwindCSS:
+
+### Before (Styled-Components)
+- CSS-in-JS approach
+- Component-scoped styles
+- Theme provider for consistency
+- Runtime style generation
+
+### After (TailwindCSS)
+- Utility-first CSS classes
+- Design system in configuration
+- Build-time CSS generation
+- Better performance and smaller bundle
+
+### Migration Benefits
+- **Faster Development**: Pre-built utility classes
+- **Better Performance**: No runtime CSS generation
+- **Smaller Bundle**: Purged unused styles
+- **Easier Maintenance**: Consistent design tokens
+- **Better Developer Experience**: IntelliSense support
+
+## 📱 Responsive Design
+
+### Breakpoints
+- **Mobile**: < 640px (2x3 grid with connecting lines)
+- **Tablet**: 640px - 1024px (2x3 grid)
+- **Desktop**: > 1024px (horizontal stepper)
+
+### Mobile Optimizations
+- Touch-friendly button sizes (44px minimum)
+- Simplified navigation
+- Optimized image loading
+- Reduced animations for performance
+
+## 🧪 Testing
+
+Run the test suite:
+```bash
+npm test
+```
+
+### Testing Strategy
+- **Unit Tests**: Component functionality
+- **Integration Tests**: API integration
+- **Accessibility Tests**: Screen reader compatibility
+- **Responsive Tests**: Multiple viewport sizes
+
+## 🚀 Deployment
+
+### Vercel Deployment
+This project is automatically deployed to Vercel on every push to the main branch.
+
+**Configuration Files:**
+- `vercel.json` - Deployment settings
+- `.npmrc` - Package manager configuration
+
+### Manual Deployment
+```bash
+npm run build
+vercel --prod
+```
+
+## 🔧 Configuration
+
+### TailwindCSS Config
+Custom configuration in `tailwind.config.js`:
+- Extended color palette
+- Custom spacing scale
+- Component utilities
+- Responsive breakpoints
+
+### PostCSS Config
+Processing pipeline in `postcss.config.js`:
+- TailwindCSS
+- Autoprefixer
+- CSS optimization
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **TypeScript Errors**
+   - Ensure TypeScript version 4.9.5 for React Scripts compatibility
+
+2. **Dependency Conflicts**
+   - Use `--legacy-peer-deps` flag with npm install
+
+3. **Build Failures**
+   - Check TailwindCSS purge configuration
+   - Verify all imports are correct
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+**Your Name**
+- GitHub: [@othsoh](https://github.com/othsoh)
+- Project: [Skip Selector UI Redesign](https://github.com/othsoh/skip-selector-ui-redesign)
+
+## 🙏 Acknowledgments
+
+- Original Create React App template
+- TailwindCSS team for the amazing utility framework
+- React community for excellent documentation and support
+- Vercel for seamless deployment platform
 
 ### Code Splitting
 

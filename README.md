@@ -6,6 +6,27 @@ A complete redesign of the WeWantWaste skip selection page, built with React Typ
 
 **Live Application**: [https://skip-selector-ui-redesign.vercel.app](https://skip-selector-ui-redesign.vercel.app)
 
+
+## 📸 UI Screenshots
+
+### Desktop View
+![Desktop - Skip Selection Interface](https://github.com/user-attachments/assets/583784bf-b218-43b8-918f-78a8b93cb4a5)
+*Modern dark theme with horizontal stepper and card grid layout*
+
+### Mobile View
+![Mobile - Responsive Design](https://github.com/user-attachments/assets/bad9fb53-0b97-4554-830f-a36f5594f48e)
+*2x3 grid layout with connecting stepper lines optimized for touch*
+
+### Key UI Features
+- 🌙 **Dark Theme**: Professional dark interface with blue accents
+- ✨ **Glass Morphism**: Backdrop blur effects and transparent cards
+- 🎨 **Interactive Cards**: Hover effects and selection states with blue borders
+- 📱 **Responsive Grid**: Adaptive layout across all screen sizes
+- 🔄 **Smooth Animations**: CSS transitions and transform effects
+- 💫 **Visual Feedback**: Clear selection indicators and progress tracking
+
+*Screenshots showcase the complete visual transformation from the original WeWantWaste interface*
+
 ## 📋 Challenge Overview
 
 This project is my submission for the WeWantWaste front-end coding challenge. The task was to completely redesign the "choose your skip size" page while maintaining all functionality and improving the user experience.
@@ -111,20 +132,6 @@ src/
 - Skip selection state management
 - Responsive grid layout
 
-## 📱 Responsive Implementation
-
-### Mobile Strategy
-- **2x3 Grid**: Optimal for mobile viewing
-- **Connecting Lines**: Visual progress indication
-- **Touch Targets**: Minimum 44px for accessibility
-- **Simplified UI**: Essential information only
-
-### Desktop Enhancement
-- **Horizontal Stepper**: Better use of screen space
-- **Larger Cards**: More detailed information
-- **Hover Effects**: Enhanced interactivity
-- **Grid Layout**: Efficient space utilization
-
 ## 🎨 Design System
 
 ### Colors
@@ -229,8 +236,5 @@ Deployed on **Vercel** with automatic deployments from GitHub:
 
 **Othman** - GitHub: [@othsoh](https://github.com/othsoh)
 
-**Repository**: [https://github.com/othsoh/skip-selector-ui-redesign](https://github.com/othsoh/skip-selector-ui-redesign)
+**Othman** - Linkedin: [@othsoh](https://www.linkedin.com/in/othman-sohab/)
 
----
-
-*This project demonstrates modern React development practices, responsive design principles, and attention to user experience details. The complete redesign showcases technical skills while maintaining practical functionality for real-world use.*

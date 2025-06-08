@@ -86,10 +86,9 @@ const WeightIcon = () => (
     stroke="currentColor"
     strokeWidth="2"
   >
-    <path d="M6.5 6.5h11l-1 7h-9l-1-7z" />
-    <path d="M6 6V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" />
-    <circle cx="9" cy="9" r="1" />
-    <circle cx="15" cy="9" r="1" />
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <path d="M12 2v20" />
+    <path d="M3 8l9 4 9-4" />
   </svg>
 );
 
@@ -126,15 +125,14 @@ export const SkipCard: React.FC<SkipCardProps> = ({
   const hirePeriod = formatHirePeriod(skip);
   const priceWithVat = skip.price_before_vat * (1 + skip.vat / 100);
   const formattedPrice =
-    priceWithVat % 1 === 0 ? priceWithVat.toFixed(0) : priceWithVat.toFixed(2);
-  return (
+    priceWithVat % 1 === 0 ? priceWithVat.toFixed(0) : priceWithVat.toFixed(2);  return (
     <div
       className={`
-        relative cursor-pointer 
+        relative cursor-pointer flex flex-col
         bg-surface backdrop-blur-sm rounded-2xl 
         shadow-lg transition-all duration-500 ease-out
         border border-slate-700 overflow-hidden
-        card-shimmer
+        card-shimmer h-full
         ${
           isSelected
             ? "border-primary shadow-[0_25px_50px_-12px_rgba(59,130,246,0.4)] bg-blue-500/15 -translate-y-0.5 scale-101"
@@ -145,7 +143,11 @@ export const SkipCard: React.FC<SkipCardProps> = ({
             ? "-translate-y-1 scale-102 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]"
             : ""
         }
-        ${!isSelected && !isHovered ? "hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:-translate-y-1 hover:scale-102" : ""}
+        ${
+          !isSelected && !isHovered
+            ? "hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:-translate-y-1 hover:scale-102"
+            : ""
+        }
       `}
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -155,7 +157,7 @@ export const SkipCard: React.FC<SkipCardProps> = ({
       <div className="relative h-56 overflow-hidden">
         {/* Image Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
-        
+
         {/* Skip Image */}
         <img
           src={imageUrl}
@@ -195,10 +197,12 @@ export const SkipCard: React.FC<SkipCardProps> = ({
               <CheckIconLarge />
             </div>
           </div>
-        )}
-      </div>      {/* Card Content */}
-      <div className="p-6 flex flex-col gap-4">
-        <div>
+        )}      </div>
+      
+      {/* Card Content */}
+      <div className="flex flex-col p-6 flex-1">
+        {/* Top Content */}
+        <div className="flex-1">
           <h3 className="text-xl font-bold text-slate-100 mb-2">
             {skip.size} Yard Skip
           </h3>
@@ -210,67 +214,70 @@ export const SkipCard: React.FC<SkipCardProps> = ({
             {skip.allows_heavy_waste ? " • Heavy waste accepted" : ""}
             {skip.forbidden ? " • Special restrictions apply" : ""}
           </p>
-        </div>
 
-        {/* Info Grid */}
-        <div className="grid grid-cols-2 gap-3 text-xs">
-          <div className="flex items-center gap-2 text-slate-500">
-            <CalendarIcon />
-            <span>{hirePeriod}</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-500">
-            <PackageIcon />
-            <span>{skip.size} yard capacity</span>
-          </div>
-          {skip.transport_cost && (
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="flex items-center gap-2 text-slate-500">
-              <TruckIcon />
-              <span>£{skip.transport_cost} transport</span>
+              <CalendarIcon />
+              <span>{hirePeriod}</span>
             </div>
-          )}
-          {skip.per_tonne_cost && (
             <div className="flex items-center gap-2 text-slate-500">
-              <DollarIcon />
-              <span>£{skip.per_tonne_cost} per tonne</span>
-            </div>
-          )}
-        </div>
-
-        {/* Price Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-700">
-          <div className="text-2xl font-bold text-gradient">
-            £{formattedPrice}
-          </div>
-          <div className="text-xs text-slate-500">inc. VAT</div>
-        </div>
-
-        {/* Button */}
-        <button
-          onClick={handleButtonClick}
-          className={`
-            inline-flex items-center justify-center w-full gap-2
-            border-0 rounded-lg font-semibold transition-all duration-300 
-            cursor-pointer px-3 py-3 text-base
-            ${
-              isSelected
-                ? "btn-gradient-selected text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
-                : "btn-gradient text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
-            }
-            disabled:opacity-50 disabled:cursor-not-allowed
-          `}
-        >
-          {isSelected ? (
-            <>
-              <CheckIcon2 />
-              Selected
-            </>
-          ) : (
-            <>
               <PackageIcon />
-              Select This Skip
-            </>
-          )}
-        </button>
+              <span>{skip.size} yard capacity</span>
+            </div>
+            {skip.transport_cost && (
+              <div className="flex items-center gap-2 text-slate-500">
+                <TruckIcon />
+                <span>£{skip.transport_cost} transport</span>
+              </div>
+            )}
+            {skip.per_tonne_cost && (
+              <div className="flex items-center gap-2 text-slate-500">
+                <DollarIcon />
+                <span>£{skip.per_tonne_cost} per tonne</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Section - Fixed at bottom */}
+        <div className="mt-4 pt-4 border-t border-slate-700">
+          {/* Price Section */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-2xl font-bold text-gradient">
+              £{formattedPrice}
+            </div>
+            <div className="text-xs text-slate-500">inc. VAT</div>
+          </div>
+
+          {/* Button */}
+          <button
+            onClick={handleButtonClick}
+            className={`
+              inline-flex items-center justify-center w-full gap-2
+              border-0 rounded-lg font-semibold transition-all duration-300 
+              cursor-pointer px-3 py-3 text-base
+              ${
+                isSelected
+                  ? "btn-gradient-selected text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
+                  : "btn-gradient text-white shadow-[0_10px_15px_-3px_rgba(59,130,246,0.25)]"
+              }
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
+          >
+            {isSelected ? (
+              <>
+                <CheckIcon2 />
+                Selected
+              </>
+            ) : (
+              <>
+                <PackageIcon />
+                Select This Skip
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -148,51 +148,25 @@ export const Stepper: React.FC<StepperProps> = ({ steps }) => {
             </div>
           ))}
         </div>
-      </div>      {/* Mobile Layout - Simple 2 Rows with Numbers and Connecting Lines */}
+      </div>      {/* Mobile Layout - Simple 2 Rows with Numbers */}
       <div className="block md:hidden px-4">
-        <div className="relative max-w-sm mx-auto">
-          {/* Connecting Lines */}
-          <div className="absolute inset-0 z-0">
-            {/* First row connecting lines (1-2, 2-3) */}
-            <div className={`absolute top-[14px] left-[28px] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
-              steps[1]?.status === 'completed' || steps[1]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
-            }`}></div>
-            <div className={`absolute top-[14px] left-[calc(33.333%+28px)] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
-              steps[2]?.status === 'completed' || steps[2]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
-            }`}></div>
-            
-            {/* Vertical connecting line from step 3 to 4 */}
-            <div className={`absolute top-[calc(14px+14px)] right-[14px] w-0.5 h-3 transition-colors duration-300 ${
-              steps[3]?.status === 'completed' || steps[3]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
-            }`}></div>
-            
-            {/* Second row connecting lines (4-5, 5-6) - Note: right to left */}
-            <div className={`absolute top-[calc(14px+3rem+12px)] right-[28px] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
-              steps[4]?.status === 'completed' || steps[4]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
-            }`}></div>
-            <div className={`absolute top-[calc(14px+3rem+12px)] right-[calc(33.333%+28px)] w-[calc(33.333%-28px)] h-0.5 transition-colors duration-300 ${
-              steps[5]?.status === 'completed' || steps[5]?.status === 'current' ? 'bg-green-400' : 'bg-gray-400/30'
-            }`}></div>
-          </div>
-          
-          <div className="grid grid-cols-3 gap-x-4 gap-y-3 relative z-10">
-            {steps.map((step) => (
-              <div key={step.id} className="flex flex-col items-center">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border-2 relative z-10 transition-all duration-300 ${
-                  step.status === 'completed' 
-                    ? 'bg-green-500 border-green-500 text-white' 
-                    : step.status === 'current'
-                    ? 'bg-blue-500 border-blue-500 text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)]'
-                    : 'bg-white/10 border-gray-400/40 text-white/60'
-                }`}>
-                  {step.status === 'completed' ? <CheckIcon /> : step.id}
-                </div>
-                <div className={`${getLabelStyles(step.status)} mt-1 text-center text-xs leading-tight px-1`}>
-                  {step.title}
-                </div>
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3 max-w-sm mx-auto">
+          {steps.map((step) => (
+            <div key={step.id} className="flex flex-col items-center">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border-2 relative z-10 transition-all duration-300 ${
+                step.status === 'completed' 
+                  ? 'bg-green-500 border-green-500 text-white' 
+                  : step.status === 'current'
+                  ? 'bg-blue-500 border-blue-500 text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)]'
+                  : 'bg-white/10 border-gray-400/40 text-white/60'
+              }`}>
+                {step.status === 'completed' ? <CheckIcon /> : step.id}
               </div>
-            ))}
-          </div>
+              <div className={`${getLabelStyles(step.status)} mt-1 text-center text-xs leading-tight px-1`}>
+                {step.title}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
